@@ -3,8 +3,6 @@ import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {Admin} from "../models/admin.models.js"
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
-
 const generateAcessandRefreshToken = async (adminId) => {
     try {
         const admin = await Admin.findById(adminId);
@@ -34,7 +32,7 @@ const registerUser = asyncHandler (async (req, res) => {
         )
     }
     try {
-        if (email !== ADMIN_EMAIL) {
+        if (email !== process.env.ADMIN_EMAIL) {
             throw new ApiError(
                 403,
                 "Unauthorized email for registration"
@@ -78,72 +76,101 @@ const registerUser = asyncHandler (async (req, res) => {
             )
         )
     } catch (error) {
-        next(error);
+        throw new ApiError(
+            500,
+            "Admin can't be registered"
+        )
     }
 })
 
 // Admin Login to generate tokens
-const loginAdmin = asyncHandler(async (req, req, next) => {
-    const {email, password} = req.body;
+// const loginAdmin = asyncHandler(async (req, res) => {
+//     const {email, password} = req.body;
 
-    if(!email){
-        throw new ApiError(
-            400,
-            "email is required"
-        )
-    }
-    try {
-        const admin = await Admin.findOne({email});
+//     if(!email){
+//         throw new ApiError(
+//             400,
+//             "email is required"
+//         )
+//     }
+//     try {
+//         const admin = await Admin.findOne({email});
 
-        if (!admin) {
-            throw new ApiError(
-                400,
-                "Invalid email or password"
-            )
-        }
+//         if (!admin) {
+//             throw new ApiError(
+//                 400,
+//                 "Invalid email or password"
+//             )
+//         }
 
-        const isPasswordValid = await admin.isPasswordCorrect(password);
+//         const isPasswordValid = await admin.isPasswordCorrect(password);
 
-        if (!isPasswordValid) {
-            throw new ApiError (
-                401,
-                "Invalid user credentials"
-            )
-        }
+//         if (!isPasswordValid) {
+//             throw new ApiError (
+//                 401,
+//                 "Invalid user credentials"
+//             )
+//         }
 
-        const {accessToken, refreshToken} = await generateAcessandRefreshToken (
-            admin._id
-        )
+//         const {accessToken, refreshToken} = await generateAcessandRefreshToken (
+//             admin._id
+//         )
 
-        const loggedInAdmin = await Admin.findById(admin._id).select(
-            "-password -refreshToken"
-        )  
+//         const loggedInAdmin = await Admin.findById(admin._id).select(
+//             "-password -refreshToken"
+//         )  
 
-        const options = {
-            httpOnly: true,
-            secure: true
-        }
+//         const options = {
+//             httpOnly: true,
+//             secure: true
+//         }
 
-        return res
-        .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
-        .json(
-            new ApiResponse(
-                200,
-                {
-                    admin: loggedInAdmin,
-                    accessToken,
-                    refreshToken
-                },
-                "Admin logged in successfully"
-            )
-        )
-    } catch (error) {
-        next (error);
-    }
-})
+//         return res
+//         .status(200)
+//         .cookie("accessToken", accessToken, options)
+//         .cookie("refreshToken", refreshToken, options)
+//         .json(
+//             new ApiResponse(
+//                 200,
+//                 {
+//                     admin: loggedInAdmin,
+//                     accessToken,
+//                     refreshToken
+//                 },
+//                 "Admin logged in successfully"
+//             )
+//         )
+//     } catch (error) {
+//         throw new ApiError(
+//             500,
+//             "Admin can't be logged in"
+//         )
+//     }
+// })
+
+// const logoutAdmin = asyncHandler(async (req, res) => {
+//     await Admin.findByIdAndUpdate(
+//         req.admin._id, 
+//         {
+//             $unset: {
+//                 refreshToken: 1
+//             }
+//         },
+//         {
+//             new: true,
+//         }
+//     )
+
+//     const options = {
+//         httpOnly: true,
+//         secure: true
+//     }
+
+//     return res
+//         .status(200)
+//         .clearCookie("accessToken", options)
+//         .clearCookie("refreshToken", options)
+// })
 
 
-
-export {registerUser, loginAdmin}
+export {registerUser}
