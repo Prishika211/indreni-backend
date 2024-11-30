@@ -7,7 +7,7 @@ const storySchema = new Schema (
             required: true,
             trim: true,
         },
-        decription: {
+        description: {
             type: String,
             required: true,
         },
