@@ -30,6 +30,10 @@ const programSchema = new Schema (
             type: Boolean,
             default: false
         },
+        photoUrl: {
+            type: String,
+            required: true,
+        },
     },
     {timestamps: true}
 )
