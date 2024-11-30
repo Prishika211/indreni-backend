@@ -19,8 +19,19 @@ app.use(cookieParser())
 
 //routes import
 import adminRouter from "./routes/admin.routes.js"
+import sliderRouter from "./routes/slider.routes.js"
+import employeeRouter from "./routes/employee.routes.js"
+import galleryRouter from "./routes/gallery.routes.js"
+import storiesRouter from "./routes/stories.routes.js"
+import programRouter from "./routes/program.routes.js"
 
 //routes declaration
 app.use("/api/v1/admins", adminRouter)
+app.use("/api/v1/sliders", sliderRouter)
+app.use("/api/v1/employees", employeeRouter)
+app.use("/api/v1/galleries", galleryRouter)
+app.use("/api/v1/stories", storiesRouter)
+app.use("/api/v1/programs", programRouter)
+
 
 export {app}
