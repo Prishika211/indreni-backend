@@ -2,7 +2,7 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {Admin} from "../models/admin.models.js"
-import {jwt} from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 
 const generateAccessandRefreshToken = async (adminId) => {
     try {
@@ -185,7 +185,7 @@ const logoutAdmin = asyncHandler(async (req, res) => {
 const refreshAccessToken = asyncHandler(async (req, res) => {
    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
-   if(incomingRefreshToken){
+   if(!incomingRefreshToken){
     throw new ApiError(
         401,
         "unauthorized request"
@@ -234,5 +234,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         throw new ApiError(401, error?.message || "Invalid refresh token")
    }
 })
+
+
 
 export {registerAdmin , loginAdmin, logoutAdmin, refreshAccessToken}
