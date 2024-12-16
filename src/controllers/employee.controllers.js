@@ -17,14 +17,14 @@ const getEmployees = asyncHandler (async (req, res) => {
 })
 
 const createEmployee = asyncHandler(async (req, res) => {
-    const {name, position} =req.body;
+    const {name, position, category} =req.body;
     const photoLocalPath = req.file?.path;
 
     try {
-        if(!(name || !position || !photoLocalPath)){
+        if(!name || !position || !category || !photoLocalPath){
             throw new ApiError(
                 400,
-                "All fields (name, position, and photoUrl) are required"
+                "All fields (name, position, category, and photoUrl) are required"
             )
         }
     
@@ -39,7 +39,7 @@ const createEmployee = asyncHandler(async (req, res) => {
 
         const newEmployee = await Employee.create(
             {
-                name, position, photoUrl: photo.url
+                name, position, category, photoUrl: photo.url
             }
         );
     
@@ -61,12 +61,13 @@ const createEmployee = asyncHandler(async (req, res) => {
 
 const updateEmployee = asyncHandler(async (req, res) => {
     const {employeeId} = req.params;
-    const {name, position} = req.body;
+    const {name, position, category} = req.body;
     const photoLocalPath = req.file?.path;
 
     const updateFields = {};
     if(name) updateFields.name = name;
     if(position) updateFields.position = position;
+    if(category) updateFields.category = category;
 
     if(photoLocalPath) {
         const photo = await uploadOnCloudinary(photoLocalPath)
