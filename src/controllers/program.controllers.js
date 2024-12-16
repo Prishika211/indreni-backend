@@ -2,7 +2,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Program } from "../models/program.models.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 // Get all programs
 const getAllPrograms = asyncHandler(async (req, res) => {
@@ -24,28 +23,23 @@ const getPastPrograms = asyncHandler(async (req, res) => {
 
 // Create a new program
 const createProgram = asyncHandler(async (req, res) => {
-    const { name, objective, targetBeneficiaries, duration, fundingPartner, remarks, isOngoing } = req.body;
-    const imageLocalPath = req.file?.path;
+    const { name, objective, targetBeneficiaries, duration, budget, fundingPartner, remarks, isOngoing } = req.body;
 
-    if (!name || !objective || !targetBeneficiaries || !duration || !fundingPartner || isOngoing === undefined || !imageLocalPath) {
+    if (!name || !objective || !targetBeneficiaries || !duration || !budget ||  !fundingPartner || isOngoing === undefined) {
         throw new ApiError(400, "All fields and an image file are required");
     }
 
     try {
-        const image = await uploadOnCloudinary(imageLocalPath);
-        if (!image?.url) {
-            throw new ApiError(400, "Error while uploading image");
-        }
 
         const newProgram = await Program.create({
             name,
             objective,
             targetBeneficiaries,
             duration,
+            budget,
             fundingPartner,
             remarks,
             isOngoing,
-            photoUrl: image.url,
         });
 
         return res.status(201).json(new ApiResponse(201, newProgram, "Program created successfully"));
@@ -58,31 +52,20 @@ const createProgram = asyncHandler(async (req, res) => {
 // Update an existing program
 const updateProgram = asyncHandler(async (req, res) => {
     const { programId } = req.params;
-    const { name, objective, targetBeneficiaries, duration, fundingPartner, remarks, isOngoing } = req.body;
-    const imageLocalPath = req.file?.path;
+    const { name, objective, targetBeneficiaries, duration, budget, fundingPartner, remarks, isOngoing } = req.body;
 
     const updateFields = {};
     if (name) updateFields.name = name;
     if (objective) updateFields.objective = objective;
     if (targetBeneficiaries) updateFields.targetBeneficiaries = targetBeneficiaries;
     if (duration) updateFields.duration = duration;
+    if (budget) updateFields.budget = budget;
     if (fundingPartner) updateFields.fundingPartner = fundingPartner;
     if (remarks !== undefined) updateFields.remarks = remarks;
     if (isOngoing !== undefined && typeof isOngoing === "boolean") {
         updateFields.isOngoing = isOngoing;
     }
 
-    if (imageLocalPath) {
-        try {
-            const image = await uploadOnCloudinary(imageLocalPath);
-            if (!image?.url) {
-                throw new ApiError(400, "Error while uploading image");
-            }
-            updateFields.photoUrl = image.url;
-        } catch (error) {
-            throw new ApiError(500, "Image upload failed");
-        }
-    }
 
     const updatedProgram = await Program.findByIdAndUpdate(programId, { $set: updateFields }, { new: true });
 
