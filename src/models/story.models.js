@@ -19,7 +19,7 @@ const storySchema = new Schema (
         ],
         owner: {
             type: Schema.Types.ObjectId,
-            ref: 'Uesr',
+            ref: 'User',
             required: true
         },
         status: {
