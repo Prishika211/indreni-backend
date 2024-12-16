@@ -4,6 +4,7 @@ import {
     createStory,
     updateStory,
     deleteStory,
+    getStory,
 } from "../controllers/stories.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
@@ -19,6 +20,7 @@ router.route("/")
 
 router.route("/:storyId")
     .patch(upload.single("image"), updateStory) // Handle image upload
-    .delete(deleteStory);
+    .delete(deleteStory)
+    .get(getStory);
 
 export default router;
