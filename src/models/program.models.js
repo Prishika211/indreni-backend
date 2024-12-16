@@ -18,6 +18,10 @@ const programSchema = new Schema (
             type: String,
             required: true
         },
+        budget: {
+            type: String,
+            required: true
+        },
         fundingPartner: {
             type: String,
             required: true
@@ -29,10 +33,6 @@ const programSchema = new Schema (
         isOngoing: {
             type: Boolean,
             default: false
-        },
-        photoUrl: {
-            type: String,
-            required: true,
         },
     },
     {timestamps: true}
