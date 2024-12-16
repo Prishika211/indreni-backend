@@ -3,6 +3,22 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Story } from "../models/story.models.js"; // Assuming you have a Story model
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import mongoose from 'mongoose'; 
+// Get a story by ID
+const getStory = asyncHandler(async (req, res) => {
+    const { storyId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(storyId)) {
+        throw new ApiError(400, "Invalid story ID format");
+    }
+
+    const story = await Story.findById(storyId);
+    if (!story) {
+        throw new ApiError(404, "Story not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, story, "Story retrieved successfully"));
+});
 
 // Get all stories
 const getAllStories = asyncHandler(async (req, res) => {
@@ -71,6 +87,10 @@ const updateStory = asyncHandler(async (req, res) => {
 const deleteStory = asyncHandler(async (req, res) => {
     const { storyId } = req.params;
 
+    if (!mongoose.Types.ObjectId.isValid(storyId)) {
+        throw new ApiError(400, "Invalid story ID format");
+    }
+    
     const deletedStory = await Story.findByIdAndDelete(storyId);
     if (!deletedStory) {
         throw new ApiError(404, "Story not found");
@@ -84,4 +104,5 @@ export {
     createStory,
     updateStory,
     deleteStory,
+    getStory,
 };
