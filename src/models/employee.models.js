@@ -2,6 +2,10 @@ import mongoose, {Schema} from "mongoose";
 
 const employeeSchema = new Schema (
     {
+        category:{
+            type: String,
+            required: true
+        },
         name: {
             type: String,
             required: true
@@ -12,7 +16,7 @@ const employeeSchema = new Schema (
         },
         photoUrl: {
             type: String,
-            required: true
+            required: true,
         }
     },
     {timestamps: true}
