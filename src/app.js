@@ -9,6 +9,7 @@ app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true
 }))
+console.log(process.env.CORS_ORIGIN);
 
 app.use(express.json({limit: "16kb"}))
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
@@ -24,6 +25,7 @@ import employeeRouter from "./routes/employee.routes.js"
 import galleryRouter from "./routes/gallery.routes.js"
 import storiesRouter from "./routes/stories.routes.js"
 import programRouter from "./routes/program.routes.js"
+import popupRouter from "./routes/popup.routes.js"
 
 //routes declaration
 app.use("/api/v1/admins", adminRouter)
@@ -32,6 +34,8 @@ app.use("/api/v1/employees", employeeRouter)
 app.use("/api/v1/galleries", galleryRouter)
 app.use("/api/v1/stories", storiesRouter)
 app.use("/api/v1/programs", programRouter)
+app.use("/api/v1/popups", popupRouter)
+
 
 
 export {app}
