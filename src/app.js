@@ -26,6 +26,9 @@ import galleryRouter from "./routes/gallery.routes.js"
 import storiesRouter from "./routes/stories.routes.js"
 import programRouter from "./routes/program.routes.js"
 import popupRouter from "./routes/popup.routes.js"
+import publicationRouter from "./routes/publication.routes.js"
+import formatRouter from "./routes/format.routes.js"
+import policyRouter from "./routes/policy.routes.js"
 
 //routes declaration
 app.use("/api/v1/admins", adminRouter)
@@ -35,6 +38,9 @@ app.use("/api/v1/galleries", galleryRouter)
 app.use("/api/v1/stories", storiesRouter)
 app.use("/api/v1/programs", programRouter)
 app.use("/api/v1/popups", popupRouter)
+app.use("/api/v1/publications", publicationRouter)
+app.use("/api/v1/formats", formatRouter)
+app.use("/api/v1/policies", policyRouter)
 
 
 
