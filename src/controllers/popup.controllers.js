@@ -6,7 +6,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import mongoose from "mongoose";
 // Create a new popup
 const createPopup = asyncHandler(async (req, res) => {
-  const { title, content, isActive } = req.body;
+  const { title, content, isActive } = req.body;  
   const photoLocalPath = req.file?.path; // For the image of the popup
   console.log(photoLocalPath);
 
@@ -16,7 +16,7 @@ const createPopup = asyncHandler(async (req, res) => {
     }
 
     // Upload the image to Cloudinary
-    const photo = await uploadOnCloudirgnary(photoLocalPath);
+    const photo = await uploadOnCloudinary(photoLocalPath);
 
     if (!photo?.url) {
       throw new ApiError(400, "Error while uploading photo");
