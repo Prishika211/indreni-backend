@@ -29,6 +29,9 @@ import popupRouter from "./routes/popup.routes.js"
 import publicationRouter from "./routes/publication.routes.js"
 import formatRouter from "./routes/format.routes.js"
 import policyRouter from "./routes/policy.routes.js"
+import noticeRouter from "./routes/notice.routes.js"
+
+
 
 //routes declaration
 app.use("/api/v1/admins", adminRouter)
@@ -41,6 +44,7 @@ app.use("/api/v1/popups", popupRouter)
 app.use("/api/v1/publications", publicationRouter)
 app.use("/api/v1/formats", formatRouter)
 app.use("/api/v1/policies", policyRouter)
+app.use("/api/v1/notices", noticeRouter)
 
 
 
