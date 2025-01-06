@@ -6,23 +6,16 @@ const noticeSchema = new Schema(
             type: String,
             required: true,
         },
-        content: {
+        description: {
             type: String,
             required: true,
             trim: true
         },
-        type: {
-            type: String,
-            enum: ['Vacancy', 'Update', 'Annoucement', 'Notice'],
-            required: true
-        },
-        attachement: {
-            type: String,
-            trim: true,
-            default: null
+        image: {
+            type: String, // URL for the uploaded image
         },
         owner: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'Admin',
             required: true
         }
