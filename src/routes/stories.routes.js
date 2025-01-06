@@ -7,12 +7,12 @@ import {
     getStory,
 } from "../controllers/stories.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
-import { verifyJWT } from "../middlewares/auth.middlewares.js";
+// import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
 const router = Router();
 
 // Protect all routes with admin authentication
-router.use(verifyJWT);
+// router.use(verifyJWT);
 
 router.route("/")
     .get(getAllStories)

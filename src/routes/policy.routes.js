@@ -6,11 +6,11 @@ import {
     getPolicy
 } from "../controllers/policy.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
-import { verifyJWT } from "../middlewares/auth.middlewares.js";
+// import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
 const router = Router();
 
-router.use(verifyJWT);
+// router.use(verifyJWT);
 
 router.route("/")
     .get(getAllPolicies)

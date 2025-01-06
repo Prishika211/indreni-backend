@@ -6,12 +6,12 @@ import {
     deleteEmployee}
 from "../controllers/employee.controllers.js"
 import {upload} from "../middlewares/multer.middlewares.js"
-import { verifyJWT } from "../middlewares/auth.middlewares.js";
+// import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
 const router = Router()
 
 //Ensure all routes are protected by admin authentication
-router.use(verifyJWT);
+// router.use(verifyJWT);
 
 router.route("/")
     .get(getEmployees)
