@@ -27,4 +27,4 @@ const formatSchema = new Schema(
     }
 )
 
-export const Format = mongoose.model("Formats", formatSchema);
+export const Format = mongoose.model("Format", formatSchema);
