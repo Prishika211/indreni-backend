@@ -2,88 +2,63 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Gallery } from "../models/gallery.models.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const addImagesToGallery = asyncHandler(async (req, res) => {
-    const {title="Gallery", category} = req.body;
-    const imageLocalPath = req.file?.path;
+  const { title = "Gallery", category } = req.body;
 
-    if(!(title || category || imageLocalPath)){
-        throw new ApiError(400, "Missing required fields");
-    }
+  if (!req.file) {
+    throw new ApiError(400, "No image uploaded");
+  }
 
-    const image = await uploadOnCloudinary(imageLocalPath);
-    if(!image?.url){
-        throw new ApiError(
-            400,
-            "Error while uploading image"
-        )
-    }
+  const imageUrl = req.file.path; // Cloudinary URL from Multer middleware
 
-    const newImage = await Gallery.create({
-        title,
-        imageUrl: {main: image.url},
-        category,
-        metadata: {
-            uploadedBy: req.admin._id,
-            size: image.bytes,
-            dimensions: {
-                width: image.width,
-                height: image.height,
-            },
-        }
-    });
+  const newImage = await Gallery.create({
+    title,
+    imageUrl: { main: imageUrl }, // Store Cloudinary URL
+    category,
+    metadata: {
+      uploadedBy: null,
+      size: req.file.size, // File size
+      dimensions: {
+        width: req.file.width || null, // Only if provided by Multer
+        height: req.file.height || null,
+      },
+    },
+  });
 
-    return res
-        .status(201)
-        .json(
-            new ApiResponse(
-                201, 
-                newImage, 
-                "Image added to gallery"
-            )
-        );
-})
+  return res
+    .status(201)
+    .json(new ApiResponse(201, newImage, "Image added to gallery"));
+});
 
+// Rest of the functions remain unchanged
 const removeGalleryImage = asyncHandler(async (req, res) => {
-    const {galleryId} = req.params;
+  const { galleryId } = req.params;
+  const galleryImage = await Gallery.findById(galleryId);
 
-    const galleryImage = await Gallery.findById(galleryId)
+  if (!galleryImage) {
+    throw new ApiError(404, "Image not found in gallery");
+  }
 
-    if(!galleryImage)
-        throw new ApiError(404, "Image not found in gallery");
+  await Gallery.findByIdAndDelete(galleryId);
 
-
-    await Gallery.findByIdAndDelete(galleryId)
-
-    return res
-        .status(200)
-        .json(
-            new ApiResponse(
-                200, 
-                {}, 
-                "Image removed from gallery"
-            )
-        )
-})
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Image removed from gallery"));
+});
 
 const getAllGalleryImages = asyncHandler(async (req, res) => {
-    const galleryImages = await Gallery.find().sort({createdAt:-1})
+  const galleryImages = await Gallery.find().sort({ createdAt: -1 });
 
-    return res
-        .status(200)
-        .json(
-            new ApiResponse(
-                200, 
-                galleryImages, 
-                "All images from gallery fetched successfully"
-            )
-        )
-})
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        galleryImages,
+        "All images from gallery fetched successfully"
+      )
+    );
+});
 
-
-export {
-    addImagesToGallery,
-    removeGalleryImage,
-    getAllGalleryImages
-}
+export { addImagesToGallery, removeGalleryImage, getAllGalleryImages };
