@@ -44,26 +44,30 @@ const getAllPolicies = asyncHandler(async (req, res) => {
 // });
 
 const createOrUpdatePolicy = asyncHandler(async (req, res) => {
-    const policyLocalPath = req.file?.path;
-    if (!policyLocalPath) {
-        throw new ApiError(400, "No policy file uploaded");
-    }
+    // const policyLocalPath = req.file?.path;
+    // if (!policyLocalPath) {
+    //     throw new ApiError(400, "No policy file uploaded");
+    // }
 
-    if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
-        throw new ApiError(400, "Invalid admin ID");
-    }
+    // if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
+    //     throw new ApiError(400, "Invalid admin ID");
+    // }
 
-    const policy = await uploadOnCloudinary(policyLocalPath);
-    if (!policy?.url) {
-        throw new ApiError(400, "Error while uploading file");
-    }
+    // const policy = await uploadOnCloudinary(policyLocalPath);
+    if (!req.file) {
+        throw new ApiError(400, "No file uploaded");
+      }
+    const policy = req.file.path;
+    // if (!policy?.url) {
+    //     throw new ApiError(400, "Error while uploading file");
+    // }
 
     // Delete the existing policy
     await Policy.deleteMany();
 
     // Create the new policy
     const newPolicy = await Policy.create({
-        policyUrls: policy.url,
+        policyUrls: policy,
         owner: req.admin._id,
     });
 
