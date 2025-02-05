@@ -31,9 +31,9 @@ const createNotice = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
   // const imageLocalPath = req.file?.path; // Assuming a single image upload
 
-  if (!title || !description) {
-    throw new ApiError(400, 'Title and description are required');
-  }
+  // if (!title || !description) {
+  //   throw new ApiError(400, 'Title and description are required');
+  // }
 
   // const image = await uploadOnCloudinary(imageLocalPath);
   if (!req.file) {
@@ -44,9 +44,9 @@ const createNotice = asyncHandler(async (req, res) => {
   //   throw new ApiError(400, 'Error while uploading image');
   // }
 
-    if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
-        throw new ApiError(400, "Invalid admin ID");
-    }
+    // if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
+    //     throw new ApiError(400, "Invalid admin ID");
+    // }
   const newNotice = await Notice.create({
     title,
     description,
