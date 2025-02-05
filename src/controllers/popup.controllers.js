@@ -2,27 +2,16 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Popup } from "../models/popup.models.js";
+
 // Create a new popup
 const createPopup = asyncHandler(async (req, res) => {
   const { title, content, isActive } = req.body;  
-  // const photoLocalPath = req.file?.path; // For the image of the popup
-  // console.log(photoLocalPath);
 
   try {
-    // if (!photoLocalPath) {
-    //   throw new ApiError(400, "Image is required");
-    // }
-
-    // Upload the image to Cloudinary
-    // const photo = await uploadOnCloudinary(photoLocalPath);
     if (!req.file) {
       throw new ApiError(400, "No image uploaded");
     }
     const photo = req.file.path;
-
-    // if (!photo?.url) {
-    //   throw new ApiError(400, "Error while uploading photo");
-    // }
 
     // Create the new popup with optional title, content, and isActive status
     const newPopup = await Popup.create({
@@ -68,9 +57,6 @@ const updatePopup = asyncHandler(async (req, res) => {
   if (req.file?.path) {
     try {
       const photo = await req.file.path;
-      // if (!photo?.url) {
-      //   throw new ApiError(400, "Error while uploading photo");
-      // }
       updateFields.imageUrl = photo;
     } catch (error) {
       console.error(error);

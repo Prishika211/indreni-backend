@@ -2,7 +2,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import {Employee} from "../models/employee.models.js";
-// import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 const getEmployees = asyncHandler (async (req, res) => {
     const employees = await Employee.find();
@@ -18,29 +17,13 @@ const getEmployees = asyncHandler (async (req, res) => {
 
 const createEmployee = asyncHandler(async (req, res) => {
     const {name, position, category} =req.body;
-    // const photoLocalPath = req.file?.path;
 
     try {
-        // if(!name || !position || !category || !photoLocalPath){
-        //     throw new ApiError(
-        //         400,
-        //         "All fields (name, position, category, and photoUrl) are required"
-        //     )
-        // }
         if (!req.file) {
             throw new ApiError(400, "No image uploaded");
           }
-        
-    
-        // const photo = await uploadOnCloudinary(photoLocalPath)
+ 
         const photo = req.file.path;
-
-        // if(!photo?.url) {
-        //     throw new ApiError(
-        //         400, 
-        //         "Error while uploading photo"
-        //     )
-        // }
 
         const newEmployee = await Employee.create(
             {
@@ -67,24 +50,12 @@ const createEmployee = asyncHandler(async (req, res) => {
 const updateEmployee = asyncHandler(async (req, res) => {
     const {employeeId} = req.params;
     const {name, position, category} = req.body;
-    // const photoLocalPath = req.file?.path;
 
     const updateFields = {};
     if(name) updateFields.name = name;
     if(position) updateFields.position = position;
     if(category) updateFields.category = category;
 
-    // if(photoLocalPath) {
-    //     const photo = await uploadOnCloudinary(photoLocalPath)
-    //     if(!photo.url) {
-    //         throw new ApiError(
-    //             400,
-    //              "Error while uploading photo"
-    //         )
-    //     }
-    //     updateFields.photoUrl = photo.url;
-    // }
-    
     if (!req.file) {
         throw new ApiError(400, "No image uploaded");
       }

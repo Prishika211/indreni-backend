@@ -2,7 +2,6 @@ import {asyncHandler} from '../utils/asyncHandler.js';
 import {ApiError} from '../utils/ApiError.js';
 import {ApiResponse} from '../utils/ApiResponse.js';
 import {Notice} from '../models/notice.models.js';
-// import { uploadOnCloudinary } from '../utils/cloudinary.js';
 import mongoose from 'mongoose';
 import { owner } from "../constants.js";
 
@@ -30,24 +29,13 @@ const getAllNotices = asyncHandler(async (req, res) => {
 // Create a new notice
 const createNotice = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
-  // const imageLocalPath = req.file?.path; // Assuming a single image upload
 
-  // if (!title || !description) {
-  //   throw new ApiError(400, 'Title and description are required');
-  // }
-
-  // const image = await uploadOnCloudinary(imageLocalPath);
   if (!req.file) {
     throw new ApiError(400, "No image uploaded");
   }
-  const image = req.file.path;
-  // if (!image?.url) {
-  //   throw new ApiError(400, 'Error while uploading image');
-  // }
 
-    // if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
-    //     throw new ApiError(400, "Invalid admin ID");
-    // }
+  const image = req.file.path;
+
   const newNotice = await Notice.create({
     title,
     description,
@@ -62,19 +50,10 @@ const createNotice = asyncHandler(async (req, res) => {
 const updateNotice = asyncHandler(async (req, res) => {
   const { noticeId } = req.params;
   const { title, description } = req.body;
-  // const imageLocalPath = req.file?.path;
 
   const updateFields = {};
   if (title) updateFields.title = title;
   if (description) updateFields.description = description;
-
-  // if (imageLocalPath) {
-  //   const image = await uploadOnCloudinary(imageLocalPath);
-  //   if (!image?.url) {
-  //     throw new ApiError(400, 'Error while uploading image');
-  //   }
-  //   updateFields.image = image.url;
-  // }
 
   if (!req.file) {
     throw new ApiError(400, "No image uploaded");

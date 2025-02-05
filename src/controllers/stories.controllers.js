@@ -1,10 +1,10 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { Story } from "../models/story.models.js"; // Assuming you have a Story model
-// import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { Story } from "../models/story.models.js"; 
 import mongoose from 'mongoose'; 
 import { owner } from "../constants.js";
+
 // Get a story by ID
 const getStory = asyncHandler(async (req, res) => {
     const { storyId } = req.params;
@@ -30,21 +30,15 @@ const getAllStories = asyncHandler(async (req, res) => {
 // Create a new story
 const createStory = asyncHandler(async (req, res) => {
     const { title, description } = req.body;
-    // const imageLocalPath = req.file?.path; // Assuming a single image upload
 
     if (!title || !description) {
         throw new ApiError(400, "Title and description are required");
     }
 
-    // Upload image to Cloudinary
-    // const image = await uploadOnCloudinary(imageLocalPath);
     if (!req.file) {
         throw new ApiError(400, "No image uploaded");
       }
     const image = req.file.path;
-    // if (!image?.url) {
-    //     throw new ApiError(400, "Error while uploading image");
-    // }
 
     const newStory = await Story.create({
         title,
@@ -60,7 +54,6 @@ const createStory = asyncHandler(async (req, res) => {
 const updateStory = asyncHandler(async (req, res) => {
     const { storyId } = req.params;
     const { title, description } = req.body;
-    // const imageLocalPath = req.file?.path;
 
     const updateFields = {};
     if (title){
@@ -68,13 +61,6 @@ const updateStory = asyncHandler(async (req, res) => {
     } 
     if (description) updateFields.description = description;
 
-    // if (imageLocalPath) {
-    //     const image = await uploadOnCloudinary(imageLocalPath);
-    //     if (!image?.url) {
-    //         throw new ApiError(400, "Error while uploading image");
-    //     }
-    //     updateFields.imageUrls = [image.url];
-    // }
     if (!req.file) {
         throw new ApiError(400, "No image uploaded");
       }
