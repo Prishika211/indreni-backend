@@ -33,12 +33,12 @@ const createFormat = asyncHandler(async (req, res) => {
 
     
     if (!req.file) {
-        throw new ApiError(400, "No image uploaded");
+        throw new ApiError(400, "No file uploaded");
     }
 
-    if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
-        throw new ApiError(400, "Invalid admin ID");
-    }
+    // if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
+    //     throw new ApiError(400, "Invalid admin ID");
+    // }
 
     // const format = await uploadOnCloudinary(formatLocalPath);
     const format = req.file.path;
@@ -62,9 +62,9 @@ const updateFormat = asyncHandler(async (req, res) => {
     const { title, description } = req.body;
     // const formatLocalPath = req.file?.path;
 
-    if (!mongoose.Types.ObjectId.isValid(formatId)) {
-        throw new ApiError(400, "Invalid Format ID format");
-    }
+    // if (!mongoose.Types.ObjectId.isValid(formatId)) {
+    //     throw new ApiError(400, "Invalid Format ID format");
+    // }
 
     if (!req.file) {
         throw new ApiError(400, "No image uploaded");
@@ -74,7 +74,7 @@ const updateFormat = asyncHandler(async (req, res) => {
     if (title){
         updateFields.title = title;
     } 
-    if (description) updateFields.description = description;
+    // if (description) updateFields.description = description;
     // if(formatLocalPath){
     //     const format = await uploadOnCloudinary(formatLocalPath);
     //     if(!format?.url){
