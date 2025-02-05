@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Policy } from "../models/policy.models.js"; 
 import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import mongoose from 'mongoose'; 
+import { owner } from "../constants.js";
 
 const getPolicy = asyncHandler(async (req, res) => {
     const { policyId } = req.params;
@@ -68,7 +69,7 @@ const createOrUpdatePolicy = asyncHandler(async (req, res) => {
     // Create the new policy
     const newPolicy = await Policy.create({
         policyUrls: policy,
-        owner: req.admin._id,
+        owner: owner,
     });
 
     return res

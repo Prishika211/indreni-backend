@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Format } from "../models/format.models.js"; 
+import { owner } from "../constants.js";
 // import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import mongoose from 'mongoose'; 
 
@@ -51,7 +52,8 @@ const createFormat = asyncHandler(async (req, res) => {
         title: title || "Untitled Format",
         description: description || "No description provided",
         formatUrls: format,
-        owner: req.admin._id, 
+        // owner: req.admin._id, 
+        owner: owner,
     });
 
     return res.status(201).json(new ApiResponse(201, newFormat, "Format created successfully"));

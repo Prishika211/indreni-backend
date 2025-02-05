@@ -21,20 +21,26 @@ const storage = new CloudinaryStorage({
     folder: "gallery-images", // Change folder name as needed
     format: file.mimetype.split("/")[1], // Auto-detect format
     public_id: `${Date.now()}-${file.originalname}`, // Unique file name
-    allowed_formats: ["jpg", "jpeg", "png"],
+    allowed_formats: ["jpg", "jpeg", "png", "pdf"], // Allow images & PDF
   }),
 });
+
+// **Modify fileFilter to accept both images and PDFs**
+const fileFilter = (_req, file, cb) => {
+  if (
+    file.mimetype.startsWith("image/") || // Allows images (jpg, png, jpeg)
+    file.mimetype === "application/pdf" // Allows PDF files
+  ) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only images and PDF files are allowed!"), false);
+  }
+};
 
 const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // Max file size: 5MB
-  fileFilter: (_req, file, cb) => {
-    if (file.mimetype.startsWith("image/")) {
-      cb(null, true);
-    } else {
-      cb(new Error("Only image files are allowed!"));
-    }
-  },
+  fileFilter,
 });
 
 export default upload;
