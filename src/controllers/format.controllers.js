@@ -76,7 +76,7 @@ const updateFormat = asyncHandler(async (req, res) => {
     if (title){
         updateFields.title = title;
     } 
-    // if (description) updateFields.description = description;
+    if (description) updateFields.description = description;
     // if(formatLocalPath){
     //     const format = await uploadOnCloudinary(formatLocalPath);
     //     if(!format?.url){
