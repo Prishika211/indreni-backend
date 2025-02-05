@@ -2,27 +2,29 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import {Slider} from "../models/slider.models.js";
-import {uploadOnCloudinary} from "../utils/cloudinary.js";
+// import {uploadOnCloudinary} from "../utils/cloudinary.js";
+import { owner } from "../constants.js";
 
 
 const addSliderImage = asyncHandler(async(req, res)=> {
-    const imageLocalPath = req.file?.path;
+    // const imageLocalPath = req.file?.path;
     const {displayOrder} = req.body;
     console.log(imageLocalPath, displayOrder
     );
-    if(!imageLocalPath){
-        throw new ApiError(400, "Image file is required");
-    }
+    // if(!imageLocalPath){
+    //     throw new ApiError(400, "Image file is required");
+    // }
 
-    const image = await uploadOnCloudinary(imageLocalPath);
-    if(!image?.url){
-        throw new ApiError(400, "Error while uploading image");
-    }
+    if (!req.file) {
+        throw new ApiError(400, "No image uploaded");
+      }
+    const image = await req.file.path;
+
 
     const slider = await Slider.create({
-        imageUrl: image.url,
+        imageUrl: image,
         displayOrder: displayOrder || 0,
-        owner: req.admin._id
+        owner: owner
     });
 
     return res

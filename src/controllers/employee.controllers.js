@@ -67,23 +67,29 @@ const createEmployee = asyncHandler(async (req, res) => {
 const updateEmployee = asyncHandler(async (req, res) => {
     const {employeeId} = req.params;
     const {name, position, category} = req.body;
-    const photoLocalPath = req.file?.path;
+    // const photoLocalPath = req.file?.path;
 
     const updateFields = {};
     if(name) updateFields.name = name;
     if(position) updateFields.position = position;
     if(category) updateFields.category = category;
 
-    if(photoLocalPath) {
-        const photo = await uploadOnCloudinary(photoLocalPath)
-        if(!photo.url) {
-            throw new ApiError(
-                400,
-                 "Error while uploading photo"
-            )
-        }
-        updateFields.photoUrl = photo.url;
-    }
+    // if(photoLocalPath) {
+    //     const photo = await uploadOnCloudinary(photoLocalPath)
+    //     if(!photo.url) {
+    //         throw new ApiError(
+    //             400,
+    //              "Error while uploading photo"
+    //         )
+    //     }
+    //     updateFields.photoUrl = photo.url;
+    // }
+    
+    if (!req.file) {
+        throw new ApiError(400, "No image uploaded");
+      }
+    const photo = await req.file.path;
+    updateFields.photoUrl = photo;
 
     const updatedEmployee = await Employee.findByIdAndUpdate(
         employeeId,

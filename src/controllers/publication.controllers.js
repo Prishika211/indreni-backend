@@ -2,8 +2,9 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Publication } from "../models/publication.models.js"; 
-import {uploadOnCloudinary} from "../utils/cloudinary.js";
+// import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import mongoose from 'mongoose'; 
+import { owner } from "../constants.js";
 
 const getPublication = asyncHandler(async (req, res) => {
     const { publicationId } = req.params;
@@ -26,29 +27,30 @@ const getAllPublications = asyncHandler(async (req, res) => {
 
 const createPublication = asyncHandler(async (req, res) => {
     const { title, description } = req.body;
-    const publicationLocalPath = req.file?.path;
+    // const publicationLocalPath = req.file?.path;
     console.log(description);
     // console.log(publicationUrls);
     console.log(publicationLocalPath);
-    if (!description || !publicationLocalPath) {
-        throw new ApiError(400, "Description and Publication URL are required");
+    if (!description) {
+        throw new ApiError(400, "Description is required");
     }
 
-    if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
-        throw new ApiError(400, "Invalid admin ID");
-    }
+    // if (!mongoose.Types.ObjectId.isValid(req.admin._id)) {
+    //     throw new ApiError(400, "Invalid admin ID");
+    // }
 
-    const publication = await uploadOnCloudinary(publicationLocalPath);
-    if(!publication?.url){
-        throw new ApiError(400, "Error while uploading file");
-    }
+    if (!req.file) {
+        throw new ApiError(400, "No publication uploaded");
+      }
+    const publication = await req.file.path;
+
 
     const newPublication = await Publication.create({
         title: title || "Untitled Publication",
         description,
-        publicationUrls: publication.url,
+        publicationUrls: publication,
 
-        owner: req.admin._id, 
+        owner: owner, 
     });
 
     return res.status(201).json(new ApiResponse(201, newPublication, "Publication created successfully"));
@@ -57,7 +59,7 @@ const createPublication = asyncHandler(async (req, res) => {
 const updatePublication = asyncHandler(async (req, res) => {
     const { publicationId } = req.params;
     const { title, description } = req.body;
-    const publicationLocalPath = req.file?.path;
+    // const publicationLocalPath = req.file?.path;
 
     if (!mongoose.Types.ObjectId.isValid(publicationId)) {
         throw new ApiError(400, "Invalid publication ID format");
@@ -69,13 +71,18 @@ const updatePublication = asyncHandler(async (req, res) => {
     } 
     if (description) updateFields.description = description;
     // if (publicationUrls) updateFields.publicationUrls = publicationUrls;
-    if(publicationLocalPath){
-        const publication = await uploadOnCloudinary(publicationLocalPath);
-        if(!publication?.url){
-            throw new ApiError(400, "Error while uploading image");
-        }
-        updateFields.publicationUrls = publication.url;
-    }
+    // if(publicationLocalPath){
+    //     const publication = await uploadOnCloudinary(publicationLocalPath);
+    //     if(!publication?.url){
+    //         throw new ApiError(400, "Error while uploading image");
+    //     }
+    //     updateFields.publicationUrls = publication.url;
+    // }
+    if (!req.file) {
+        throw new ApiError(400, "No publication uploaded");
+      }
+    const publication = await req.file.path;
+    updateFields.publicationUrls = publication;
 
 
     const updatedPublication = await Publication.findByIdAndUpdate(

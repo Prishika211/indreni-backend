@@ -2,29 +2,31 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Popup } from "../models/popup.models.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import mongoose from "mongoose";
 // Create a new popup
 const createPopup = asyncHandler(async (req, res) => {
   const { title, content, isActive } = req.body;  
-  const photoLocalPath = req.file?.path; // For the image of the popup
-  console.log(photoLocalPath);
+  // const photoLocalPath = req.file?.path; // For the image of the popup
+  // console.log(photoLocalPath);
 
   try {
-    if (!photoLocalPath) {
-      throw new ApiError(400, "Image is required");
-    }
+    // if (!photoLocalPath) {
+    //   throw new ApiError(400, "Image is required");
+    // }
 
     // Upload the image to Cloudinary
-    const photo = await uploadOnCloudinary(photoLocalPath);
-
-    if (!photo?.url) {
-      throw new ApiError(400, "Error while uploading photo");
+    // const photo = await uploadOnCloudinary(photoLocalPath);
+    if (!req.file) {
+      throw new ApiError(400, "No image uploaded");
     }
+    const photo = req.file.path;
+
+    // if (!photo?.url) {
+    //   throw new ApiError(400, "Error while uploading photo");
+    // }
 
     // Create the new popup with optional title, content, and isActive status
     const newPopup = await Popup.create({
-      imageUrl: photo.url,
+      imageUrl: photo,
       title: title || "",  // Default to empty string if not provided
       content: content || "",  // Default to empty string if not provided
       isActive: isActive !== undefined ? isActive : true, // Default to true if not provided
@@ -65,11 +67,11 @@ const updatePopup = asyncHandler(async (req, res) => {
   // If a new image is provided, upload it to Cloudinary
   if (req.file?.path) {
     try {
-      const photo = await uploadOnCloudinary(req.file.path);
-      if (!photo?.url) {
-        throw new ApiError(400, "Error while uploading photo");
-      }
-      updateFields.imageUrl = photo.url;
+      const photo = await req.file.path;
+      // if (!photo?.url) {
+      //   throw new ApiError(400, "Error while uploading photo");
+      // }
+      updateFields.imageUrl = photo;
     } catch (error) {
       console.error(error);
       throw new ApiError(500, "Internal Server Error during image upload");

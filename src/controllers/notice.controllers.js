@@ -4,6 +4,7 @@ import {ApiResponse} from '../utils/ApiResponse.js';
 import {Notice} from '../models/notice.models.js';
 // import { uploadOnCloudinary } from '../utils/cloudinary.js';
 import mongoose from 'mongoose';
+import { owner } from "../constants.js";
 
 // Get a notice by ID
 const getNotice = asyncHandler(async (req, res) => {
@@ -51,7 +52,7 @@ const createNotice = asyncHandler(async (req, res) => {
     title,
     description,
     image: image,
-    owner: req.admin._id,
+    owner: owner,
   });
 
   res.status(201).json(new ApiResponse(201, newNotice, 'Notice created successfully'));
