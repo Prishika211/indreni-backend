@@ -9,8 +9,8 @@ import { owner } from "../constants.js";
 const addSliderImage = asyncHandler(async(req, res)=> {
     // const imageLocalPath = req.file?.path;
     const {displayOrder} = req.body;
-    console.log(imageLocalPath, displayOrder
-    );
+    // console.log(imageLocalPath, displayOrder
+    // );
     // if(!imageLocalPath){
     //     throw new ApiError(400, "Image file is required");
     // }

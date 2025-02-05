@@ -30,7 +30,7 @@ const createPublication = asyncHandler(async (req, res) => {
     // const publicationLocalPath = req.file?.path;
     console.log(description);
     // console.log(publicationUrls);
-    console.log(publicationLocalPath);
+    // console.log(publicationLocalPath);
     if (!description) {
         throw new ApiError(400, "Description is required");
     }
